@@ -1,0 +1,36 @@
+<template lang="pug">
+div
+  h1 App
+  div count: {{ count }}
+  div
+    button(@click="increment") increment
+  div
+    input(type="number" v-model="input")
+    button(@click="add") add
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+
+export default Vue.extend({
+  data: () => ({
+    input: '',
+  }),
+
+  computed: {
+    count() {
+      return this.$store.foo.state.count
+    },
+  },
+
+  methods: {
+    increment() {
+      this.$store.foo.actions.increment()
+    },
+
+    add() {
+      this.$store.foo.actions.add(Number(this.input))
+    },
+  },
+})
+</script>
