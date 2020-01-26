@@ -12,6 +12,7 @@ div
 
 <script lang="ts">
 import Vue from 'vue'
+import ValidationError from '../app/errors/validation-error'
 export default Vue.extend({
   data: () => ({
     email: '',
@@ -33,6 +34,8 @@ export default Vue.extend({
         await this.$store.session.actions.login(this.email, this.password)
       } catch (error) {
         console.warn(error)
+        console.log(error?.errors) // OK
+        console.log(error instanceof ValidationError) // FIXME: why false ?
       } finally {
         this.disabled = false
       }

@@ -10,7 +10,7 @@ export default class extends ApiClient {
     return '/users'
   }
 
-  register(email: string, password: string) {
+  execute(email: string, password: string) {
     try {
       return this.$request('post', undefined, undefined, { email, password })
     } catch (error) {

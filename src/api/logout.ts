@@ -9,7 +9,7 @@ export default class extends ApiClient {
     return '/session'
   }
 
-  logout() {
+  execute() {
     try {
       return this.$request('delete')
     } catch (error) {

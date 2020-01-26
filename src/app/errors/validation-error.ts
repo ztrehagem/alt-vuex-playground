@@ -1,17 +1,29 @@
+import { AxiosError } from 'axios'
 import AppError from './app-error'
 
-export type ValidationErrorMessages = { [prop: string]: string[] }
+type StringKeyof<T> = T extends Record<string, any> ? string : never
 
-export type Validation<Context> = { prop: string, validate: (ctx: Context) => boolean, message: string }
+export type ValidationErrorMessages<Keys extends string> = Partial<Record<Keys, string[]>> //{ [Key in Keys]: string[] }  //Record<Keys, string[]>
 
-export default class ValidationError extends AppError {
-  errors: ValidationErrorMessages = {}
+export interface Validation<Context> {
+  prop: StringKeyof<Context>
+  validate: (ctx: Context) => boolean
+  message: string
 }
 
-export class ValidationErrorBuilder {
-  errors: ValidationErrorMessages = {}
+export default class ValidationError<Keys extends string> extends AppError {
+  errors?: ValidationErrorMessages<Keys>
 
-  try(prop: string, validate: () => boolean, message: string) {
+  static fromApiResponse(error: AxiosError) {
+    // TODO: implement
+    return new ValidationError(error)
+  }
+}
+
+export class ValidationErrorBuilder<Keys extends string> {
+  errors: ValidationErrorMessages<Keys> = {}
+
+  try(prop: Keys, validate: () => boolean, message: string) {
     const result = validate()
     if (!result) return
 
@@ -32,11 +44,9 @@ export class ValidationErrorBuilder {
 }
 
 export class Validator<Context extends Record<string, any>> {
-  context: Context
-  collection: Validation<Context>[]
+  protected collection: Validation<Context>[]
 
-  constructor(context: Context, collection: Validation<Context>[] = []) {
-    this.context = context
+  constructor(collection: Validation<Context>[] = []) {
     this.collection = collection
   }
 
@@ -44,10 +54,10 @@ export class Validator<Context extends Record<string, any>> {
     this.collection.push(validation)
   }
 
-  validate() {
-    const builder = new ValidationErrorBuilder()
+  validate(context: Context) {
+    const builder = new ValidationErrorBuilder<StringKeyof<Context>>()
     this.collection.forEach(({ prop, validate, message }) => {
-      builder.try(prop, () => validate(this.context), message)
+      builder.try(prop, () => validate(context), message)
     })
     return builder.toError()
   }

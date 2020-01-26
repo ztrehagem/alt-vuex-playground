@@ -19,17 +19,17 @@ export default Vue.extend({
 
   computed: {
     count() {
-      return this.$store.foo.state.count
+      return this.$store.counter.state.count
     },
   },
 
   methods: {
     increment() {
-      this.$store.foo.actions.increment()
+      this.$store.counter.actions.increment()
     },
 
     add() {
-      this.$store.foo.actions.add(Number(this.input))
+      this.$store.counter.actions.add(Number(this.input))
     },
   },
 })
