@@ -19,7 +19,8 @@ class Actions extends lib.Actions<State> {
   }
 }
 
-export default new lib.Module({
-  state: State,
-  actions: Actions,
-})
+export default class extends lib.Module<State, Actions> {
+  constructor() {
+    super({ state: State, actions: Actions })
+  }
+}

@@ -1,5 +1,6 @@
 <template lang="pug">
 div
+  h2 Session
   div isLoggedIn: {{ isLoggedIn }}
   div(v-if="isLoggedIn")
     button(@click="logout" :disabled="disabled") logout
