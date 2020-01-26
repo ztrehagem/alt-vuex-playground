@@ -1,4 +1,13 @@
+// vendors
 import Vue from 'vue'
+
+// plugins
+import './plugins/axios'
+
+// dev
+import './mock/axios'
+
+// applications
 import App from './App.vue'
 import * as store from './store'
 

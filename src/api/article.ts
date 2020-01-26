@@ -1,5 +1,5 @@
-import { ApiClient } from './'
-import { ValidationError, NoSessionError, NoPermissionError, NoResourceError, UnexpectedError } from './errors'
+import ApiClient from '../plugins/api-client'
+import { ValidationError, NoSessionError, NoPermissionError, NoResourceError, UnexpectedError } from '../app/errors'
 
 interface UriParams {
   id: number
@@ -20,7 +20,7 @@ export class ArticleApi extends ApiClient<UriParams> {
 
   fetch(id: number) {
     try {
-      return this.$call('get', { id })
+      return this.$request('get', { id })
     } catch (error) {
       switch (error?.response?.status) {
         case 401:
@@ -37,7 +37,7 @@ export class ArticleApi extends ApiClient<UriParams> {
 
   create(article: Article) {
     try {
-      return this.$call('post', undefined, undefined, article)
+      return this.$request('post', undefined, undefined, article)
     } catch (error) {
       switch (error?.response?.status) {
         case 400:
@@ -54,7 +54,7 @@ export class ArticleApi extends ApiClient<UriParams> {
 
   update(id: number, article: Article) {
     try {
-      return this.$call('put', { id }, undefined, article)
+      return this.$request('put', { id }, undefined, article)
     } catch (error) {
       switch (error?.response?.status) {
         case 400:
@@ -73,7 +73,7 @@ export class ArticleApi extends ApiClient<UriParams> {
 
   delete(id: number) {
     try {
-      return this.$call('delete', { id })
+      return this.$request('delete', { id })
     } catch (error) {
       switch (error?.response?.status) {
         case 401:

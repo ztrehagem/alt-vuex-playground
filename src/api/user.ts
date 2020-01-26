@@ -1,5 +1,5 @@
-import { ApiClient } from './'
-import { ValidationError, NoSessionError, NoPermissionError, NoResourceError, UnexpectedError } from './errors'
+import ApiClient from '../plugins/api-client'
+import { ValidationError, NoSessionError, NoPermissionError, NoResourceError, UnexpectedError } from '../app/errors'
 
 interface UriParams {
   id: number
@@ -20,7 +20,7 @@ export class UserApi extends ApiClient<UriParams> {
 
   register(email: string, password: string) {
     try {
-      return this.$call('post', undefined, undefined, { email, password })
+      return this.$request('post', undefined, undefined, { email, password })
     } catch (error) {
       switch (error?.response?.status) {
         case 400:
@@ -33,7 +33,7 @@ export class UserApi extends ApiClient<UriParams> {
 
   fetch(id: number) {
     try {
-      return this.$call('get', { id })
+      return this.$request('get', { id })
     } catch (error) {
       switch (error?.response?.status) {
         case 401:
@@ -50,7 +50,7 @@ export class UserApi extends ApiClient<UriParams> {
 
   update(id: number, user: User) {
     try {
-      return this.$call('put', { id }, undefined, user)
+      return this.$request('put', { id }, undefined, user)
     } catch (error) {
       switch (error?.response?.status) {
         case 400:

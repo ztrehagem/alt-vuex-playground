@@ -1,5 +1,5 @@
-import { ApiClient } from './'
-import { ValidationError, UnexpectedError } from './errors'
+import ApiClient from '../plugins/api-client'
+import { ValidationError, UnexpectedError } from '../app/errors'
 
 export class SessionApi extends ApiClient {
   /**
@@ -11,7 +11,7 @@ export class SessionApi extends ApiClient {
 
   login(email: string, password: string) {
     try {
-      return this.$call('post', undefined, undefined, { email, password })
+      return this.$request('post', undefined, undefined, { email, password })
     } catch (error) {
       switch (error?.response?.status) {
         case 400:
@@ -24,7 +24,7 @@ export class SessionApi extends ApiClient {
 
   logout() {
     try {
-      return this.$call('delete')
+      return this.$request('delete')
     } catch (error) {
       throw new UnexpectedError(error)
     }

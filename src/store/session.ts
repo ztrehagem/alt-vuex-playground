@@ -1,4 +1,4 @@
-import * as lib from './lib'
+import * as lib from '../lib/store'
 import { SessionApi } from '../api/session'
 
 class State {
