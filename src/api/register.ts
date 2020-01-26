@@ -2,6 +2,11 @@ import ApiClient from '../plugins/api-client'
 import ValidationError from '../app/errors/validation-error'
 import UnexpectedError from '../app/errors/unexpected-error'
 
+interface Payload {
+  email: string
+  password: string
+}
+
 export default class extends ApiClient {
   /**
    * @override
@@ -10,9 +15,9 @@ export default class extends ApiClient {
     return '/users'
   }
 
-  execute(email: string, password: string) {
+  execute(payload: Payload) {
     try {
-      return this.$request('post', undefined, undefined, { email, password })
+      return this.$request('post', { data: payload })
     } catch (error) {
       switch (error?.response?.status) {
         case 400:

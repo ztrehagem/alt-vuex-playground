@@ -1,13 +1,13 @@
 import ApiClient from '../plugins/api-client'
-import ValidationError, { ValidationErrorBuilder, Validator, Validation } from '../app/errors/validation-error'
+import ValidationError, { Validator, Validation } from '../app/errors/validation-error'
 import UnexpectedError from '../app/errors/unexpected-error'
 
-interface Params {
+interface Payload {
   email: string
   password: string
 }
 
-const validations: Validation<Params>[] = [
+const validations: Validation<Payload>[] = [
   {
     prop: 'email',
     validate: ({ email }) => !email,
@@ -26,7 +26,7 @@ const validations: Validation<Params>[] = [
 ]
 
 export default class extends ApiClient {
-  protected validator = new Validator<Params>(validations)
+  protected validator = new Validator<Payload>(validations)
 
   /**
    * @override
@@ -35,19 +35,16 @@ export default class extends ApiClient {
     return '/session'
   }
 
-  validate(params: Params) {
-    return this.validator.validate(params)
+  validate(payload: Payload) {
+    return this.validator.validate(payload)
   }
 
-  execute(params: Params) {
-    const error = this.validate(params)
+  execute(payload: Payload) {
+    const error = this.validate(payload)
     if (error) throw error
 
     try {
-      return this.$request('post', undefined, undefined, {
-        email: params.email,
-        password: params.password,
-      })
+      return this.$request('post', { data: payload })
     } catch (error) {
       switch (error?.response?.status) {
         case 400:

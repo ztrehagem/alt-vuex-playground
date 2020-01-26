@@ -1,6 +1,13 @@
-import axiosStatic, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axiosStatic, { AxiosInstance, AxiosRequestConfig, CancelTokenSource } from 'axios'
 
 type HttpMethod = 'get' | 'put' | 'post' | 'delete'
+
+interface RequestConfig<UriParams, QueryParams> {
+  params?: UriParams
+  query?: QueryParams
+  data?: any
+  cancelPreviousCall?: boolean
+}
 
 export function buildUri(str: string, params: Record<string, any> = {}) {
   return str.replace(/\/\{([^\/]+?)\}/g, (match: string, key: string) => params[key] ? `/${params[key]}` : '')
@@ -9,6 +16,7 @@ export function buildUri(str: string, params: Record<string, any> = {}) {
 export abstract class ApiClient<UriParams extends Record<string, any> = never, QueryParams extends Record<string, any> = never> {
   private localAxios?: AxiosInstance
   static staticAxios?: AxiosInstance
+  protected cancelTokenSource: CancelTokenSource | null = null
 
   constructor(axios?: AxiosInstance) {
     this.localAxios = axios
@@ -24,14 +32,21 @@ export abstract class ApiClient<UriParams extends Record<string, any> = never, Q
     return {}
   }
 
-  protected request(method: HttpMethod, params?: UriParams, query?: QueryParams, data?: any, config: AxiosRequestConfig = {}) {
+  protected request(method: HttpMethod, config: RequestConfig<UriParams, QueryParams> = {}, extraConfig: AxiosRequestConfig = {}) {
+    if (config.cancelPreviousCall && this.cancelTokenSource) {
+      this.cancelTokenSource.cancel()
+    }
+
+    this.cancelTokenSource = axiosStatic.CancelToken.source()
+
     return this.axios.request({
       method,
-      url: buildUri(this.uri, params),
-      params: query,
-      data,
+      url: buildUri(this.uri, config.params),
+      params: config.query,
+      data: config.data,
+      cancelToken: this.cancelTokenSource.token,
       ...this.localConfig,
-      ...config,
+      ...extraConfig,
     })
   }
 
