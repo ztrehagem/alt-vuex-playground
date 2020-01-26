@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axiosStatic, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { uri } from '../utils/string'
 
 type HttpMethod = 'get' | 'put' | 'post' | 'delete'
@@ -6,7 +6,7 @@ type HttpMethod = 'get' | 'put' | 'post' | 'delete'
 export abstract class ApiClient<UriParams extends Record<string, any> = never, QueryParams extends Record<string, any> = never> {
   private axios: AxiosInstance
 
-  constructor(axios: AxiosInstance) {
+  constructor(axios: AxiosInstance = axiosStatic) {
     this.axios = axios
   }
 
