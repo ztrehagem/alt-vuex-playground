@@ -15,7 +15,7 @@ const validations: Validation<Payload>[] = [
   },
   {
     prop: 'email',
-    validate: ({ email }) => !email.match(/^[^@]+@[^[@]$/),
+    validate: ({ email }) => !email.match(/^[^@]+@[^@]$/),
     message: 'INVALID_FORMAT',
   },
   {
