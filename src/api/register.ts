@@ -1,15 +1,16 @@
 import ApiClient from '../plugins/api-client'
-import { ValidationError, UnexpectedError } from '../app/errors'
+import ValidationError from '../app/errors/validation-error'
+import UnexpectedError from '../app/errors/unexpected-error'
 
-export class SessionApi extends ApiClient {
+export default class extends ApiClient {
   /**
    * @override
    */
   get uri() {
-    return '/session'
+    return '/users'
   }
 
-  login(email: string, password: string) {
+  register(email: string, password: string) {
     try {
       return this.$request('post', undefined, undefined, { email, password })
     } catch (error) {
@@ -19,14 +20,6 @@ export class SessionApi extends ApiClient {
         default:
           throw new UnexpectedError(error)
       }
-    }
-  }
-
-  logout() {
-    try {
-      return this.$request('delete')
-    } catch (error) {
-      throw new UnexpectedError(error)
     }
   }
 }

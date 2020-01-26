@@ -5,10 +5,7 @@ export default abstract class <
   UriParams extends Record<string, any> = never,
   QueryParams extends Record<string, any> = never,
 > extends ApiClient<UriParams, QueryParams> {
-  /**
-   * @override
-   */
-  get axios() {
-    return axios
+  constructor() {
+    super(axios)
   }
 }

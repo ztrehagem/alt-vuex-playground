@@ -1,20 +1,21 @@
 import * as lib from '../lib/store'
-import { SessionApi } from '../api/session'
+import LoginApi from '../api/login'
+import LogoutApi from '../api/logout'
 
 class State {
   isLoggedIn = false
 }
 
 class Actions extends lib.Actions<State> {
-  api = new SessionApi()
-
   async login(email: string, password: string) {
-    await this.api.login(email, password)
+    const api = new LoginApi()
+    await api.login(email, password)
     this.$state.isLoggedIn = true
   }
 
   async logout() {
-    await this.api.logout()
+    const api = new LogoutApi()
+    await api.logout()
     this.$state.isLoggedIn = false
   }
 }
