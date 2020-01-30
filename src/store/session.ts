@@ -8,14 +8,12 @@ class State {
 
 class Actions extends lib.Actions<State> {
   async login(email: string, password: string) {
-    const api = new LoginApi()
-    await api.execute({ email, password })
+    await new LoginApi().execute({ email, password })
     this.$state.isLoggedIn = true
   }
 
   async logout() {
-    const api = new LogoutApi()
-    await api.execute()
+    await new LogoutApi().execute()
     this.$state.isLoggedIn = false
   }
 }
