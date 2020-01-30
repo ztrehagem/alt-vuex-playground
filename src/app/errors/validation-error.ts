@@ -1,7 +1,8 @@
 import { AxiosError } from 'axios'
 import AppError from './app-error'
 
-type StringKeyof<T> = T extends Record<string, any> ? string : never
+type StringKeyof<T> = T extends Record<infer U, any> ? U extends string ? U : never : never
+type U = StringKeyof<Record<'a' | 'b', number>>
 
 export type ValidationErrorMessages<Keys extends string> = Partial<Record<Keys, string[]>> //{ [Key in Keys]: string[] }  //Record<Keys, string[]>
 
@@ -37,7 +38,7 @@ export class ValidationErrorBuilder<Keys extends string> {
   toError() {
     if (!this.hasErrors) return
 
-    const error = new ValidationError()
+    const error = new ValidationError<Keys>()
     error.errors = this.errors
     return error
   }
