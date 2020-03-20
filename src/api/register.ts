@@ -8,16 +8,17 @@ interface Payload {
 }
 
 export default class extends ApiClient {
-  /**
-   * @override
-   */
   get uri() {
     return '/users'
   }
 
+  get method() {
+    return 'post' as const
+  }
+
   execute(payload: Payload) {
     try {
-      return this.$request('post', { data: payload })
+      return this.$request({ data: payload })
     } catch (error) {
       switch (error?.response?.status) {
         case 400:

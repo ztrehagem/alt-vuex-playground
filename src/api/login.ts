@@ -28,11 +28,12 @@ const validations: Validation<Payload>[] = [
 export default class extends ApiClient {
   protected validator = new Validator<Payload>(validations)
 
-  /**
-   * @override
-   */
   get uri() {
     return '/session'
+  }
+
+  get method() {
+    return 'post' as const
   }
 
   validate(payload: Payload) {
@@ -44,7 +45,7 @@ export default class extends ApiClient {
     if (error) throw error
 
     try {
-      return this.$request('post', { data: payload })
+      return this.$request({ data: payload })
     } catch (error) {
       switch (error?.response?.status) {
         case 400:

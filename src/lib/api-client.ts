@@ -24,6 +24,8 @@ export abstract class ApiClient<UriParams extends Record<string, any> = never, Q
 
   protected abstract get uri(): string
 
+  protected abstract get method(): AxiosRequestConfig['method']
+
   protected get axios() {
     return this.localAxios || ApiClient.staticAxios || axiosStatic
   }
@@ -32,7 +34,7 @@ export abstract class ApiClient<UriParams extends Record<string, any> = never, Q
     return {}
   }
 
-  protected request(method: HttpMethod, config: RequestConfig<UriParams, QueryParams> = {}, extraConfig: AxiosRequestConfig = {}) {
+  protected request(config: RequestConfig<UriParams, QueryParams> = {}, extraConfig: AxiosRequestConfig = {}) {
     if (config.cancelPreviousCall && this.cancelTokenSource) {
       this.cancelTokenSource.cancel()
     }
@@ -40,7 +42,7 @@ export abstract class ApiClient<UriParams extends Record<string, any> = never, Q
     this.cancelTokenSource = axiosStatic.CancelToken.source()
 
     return this.axios.request({
-      method,
+      method: this.method,
       url: buildUri(this.uri, config.params),
       params: config.query,
       data: config.data,
