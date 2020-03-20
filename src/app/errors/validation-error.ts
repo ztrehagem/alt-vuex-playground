@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import AppError from './app-error'
 
-type StringKeyof<T> = T extends Record<infer U, any> ? U extends string ? U : never : never
+type StringKeyof<T> = { [K in keyof T]: K }[keyof T] & string
 
 export type ValidationErrorMessages<Keys extends string> = Partial<Record<Keys, string[]>> //{ [Key in Keys]: string[] }  //Record<Keys, string[]>
 
