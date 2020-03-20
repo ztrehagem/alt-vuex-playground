@@ -5,7 +5,7 @@ export interface Class<T> {
 }
 
 export class Actions<S> {
-  $state: S
+  protected $state: S
 
   constructor($state: S) {
     this.$state = $state
